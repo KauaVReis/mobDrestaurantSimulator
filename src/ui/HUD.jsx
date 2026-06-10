@@ -97,12 +97,27 @@ function ComboIndicator() {
   const windowLeft = lastExitAt !== null ? COMBO_WINDOW - (s.elapsed - lastExitAt) : null
   if (!streak || streak < 1 || windowLeft === null || windowLeft <= 0) return null
   const nextBonus = Math.round(comboBonus(Math.min(5, streak + 1)) * 100)
+  
+  const colors = [
+    { text: 'text-amber-300', bg: 'bg-amber-400', fx: '' },
+    { text: 'text-orange-400', bg: 'bg-orange-500', fx: '' },
+    { text: 'text-red-400', bg: 'bg-red-500', fx: 'shake' },
+    { text: 'text-pink-400', bg: 'bg-pink-500', fx: 'bob' },
+    { text: 'text-purple-400', bg: 'bg-purple-500', fx: 'spin-slow drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]' },
+  ]
+  const theme = colors[Math.min(streak - 1, 4)] || colors[0]
+
   return (
-    <div className="absolute bottom-4 left-3 bg-black/55 rounded-2xl px-4 py-2.5 pixel-border">
-      <div className="text-[10px] font-black text-amber-300 tracking-wider">COMBO GOURMET</div>
-      <div className="text-2xl font-black text-white">×{streak} <span className="text-sm text-amber-200">próximo +{nextBonus}%</span></div>
+    <div className={`absolute bottom-4 left-3 bg-black/55 rounded-2xl px-4 py-2.5 pixel-border ${streak >= 5 ? 'bob' : ''}`}>
+      <div className={`text-[10px] font-black tracking-wider ${theme.text}`}>
+        COMBO GOURMET {streak >= 5 ? '🔥' : ''}
+      </div>
+      <div className="text-2xl font-black text-white flex items-center gap-2">
+        <span className={theme.text}>×{streak}</span>
+        <span className="text-sm text-white/50">próximo +{nextBonus}%</span>
+      </div>
       <div className="h-1.5 w-36 bg-black/50 rounded-full mt-1 overflow-hidden">
-        <div className="h-full bg-amber-400 rounded-full" style={{ width: `${(windowLeft / COMBO_WINDOW) * 100}%` }} />
+        <div className={`h-full rounded-full ${theme.bg} ${streak >= 5 ? 'brightness-150' : ''}`} style={{ width: `${(windowLeft / COMBO_WINDOW) * 100}%` }} />
       </div>
       <div className="text-[10px] font-bold text-white/60 mt-0.5">entre em outro restaurante!</div>
     </div>
