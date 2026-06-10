@@ -109,6 +109,11 @@ export default function Menu() {
           )}
         </Modal>
       )}
+
+      {/* versão beta */}
+      <div className="absolute bottom-4 right-4 text-white/30 text-xs font-bold font-mono pointer-events-none">
+        beta-v0.6.7
+      </div>
     </div>
   )
 }
