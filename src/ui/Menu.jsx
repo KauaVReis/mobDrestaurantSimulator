@@ -51,11 +51,11 @@ export default function Menu() {
             🍽️ JOGAR
           </button>
           <div className="flex gap-2.5">
-            <button onClick={() => setModal('help')} onMouseEnter={sfx.hover}
+            <button onClick={() => { sfx.click(); setModal('help') }} onMouseEnter={sfx.hover}
               className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
               📖 Como Jogar
             </button>
-            <button onClick={() => setModal('records')} onMouseEnter={sfx.hover}
+            <button onClick={() => { sfx.click(); setModal('records') }} onMouseEnter={sfx.hover}
               className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
               🏆 Recordes
             </button>
@@ -121,11 +121,11 @@ export default function Menu() {
 
 function Modal({ title, children, onClose }) {
   return (
-    <div className="absolute inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="absolute inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => { sfx.click(); onClose() }}>
       <div className="bg-slate-900 rounded-3xl p-6 pixel-border max-w-lg w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-black text-white">{title}</h3>
-          <button onClick={onClose} className="text-white/60 hover:text-white font-black text-xl cursor-pointer">✕</button>
+          <button onClick={() => { sfx.click(); onClose() }} onMouseEnter={sfx.hover} className="text-white/60 hover:text-white font-black text-xl cursor-pointer">✕</button>
         </div>
         {children}
       </div>

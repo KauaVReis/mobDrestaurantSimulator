@@ -49,9 +49,10 @@ function TimerClock() {
 function StaminaBar() {
   usePoll(100)
   const pct = (world.stamina / 100) * 100
+  const full = pct >= 100 && !world.panting
   return (
     <div className="w-44 mt-1">
-      <div className="h-2.5 bg-black/50 rounded-full overflow-hidden ring-1 ring-white/20">
+      <div className={`h-2.5 bg-black/50 rounded-full overflow-hidden ring-1 ring-white/20${full ? ' stamina-full' : ''}`}>
         <div
           className={`h-full rounded-full transition-[width] duration-100 ${world.panting ? 'bg-red-400' : pct < 30 ? 'bg-amber-400' : 'bg-lime-400'}`}
           style={{ width: `${pct}%` }}
@@ -114,11 +115,22 @@ function Buffs() {
   const chaves = useGame((st) => st.chaves)
   const now = s.elapsed
   const items = []
-  if (now < s.voracityUntil) items.push({ icon: '🔥', label: `VORACIDADE ${Math.ceil(s.voracityUntil - now)}s`, c: 'text-orange-300' })
-  else if (now < s.voracityCdUntil) items.push({ icon: '⏳', label: `Q em ${Math.ceil(s.voracityCdUntil - now)}s`, c: 'text-white/40' })
-  else items.push({ icon: '🔥', label: 'Q — Voracidade pronta!', c: 'text-orange-200' })
-  if (now < s.buffs.pepperUntil) items.push({ icon: '🌶️', label: `+40% ${Math.ceil(s.buffs.pepperUntil - now)}s`, c: 'text-red-300' })
-  if (now < s.buffs.skateUntil) items.push({ icon: '🛹', label: `×2 ${Math.ceil(s.buffs.skateUntil - now)}s`, c: 'text-cyan-300' })
+  if (now < s.voracityUntil) {
+    const rem = s.voracityUntil - now
+    items.push({ icon: '🔥', label: `VORACIDADE ${Math.ceil(rem)}s`, c: 'text-orange-300', expiring: rem <= 3 })
+  } else if (now < s.voracityCdUntil) {
+    items.push({ icon: '⏳', label: `Q em ${Math.ceil(s.voracityCdUntil - now)}s`, c: 'text-white/40' })
+  } else {
+    items.push({ icon: '🔥', label: 'Q — Voracidade pronta!', c: 'text-orange-200' })
+  }
+  if (now < s.buffs.pepperUntil) {
+    const rem = s.buffs.pepperUntil - now
+    items.push({ icon: '🌶️', label: `+40% ${Math.ceil(rem)}s`, c: 'text-red-300', expiring: rem <= 3 })
+  }
+  if (now < s.buffs.skateUntil) {
+    const rem = s.buffs.skateUntil - now
+    items.push({ icon: '🛹', label: `×2 ${Math.ceil(rem)}s`, c: 'text-cyan-300', expiring: rem <= 3 })
+  }
   if (now < s.buffs.slowUntil) items.push({ icon: '🫠', label: 'molho!', c: 'text-orange-200' })
   if (now < s.buffs.frozenUntil) items.push({ icon: '🕵️', label: 'INSPEÇÃO!', c: 'text-red-300' })
   if (chaves > 0 && !s.secretUnlocked) items.push({ icon: '🗝️', label: `${chaves}/3`, c: 'text-yellow-300' })
@@ -126,7 +138,7 @@ function Buffs() {
   return (
     <div className="flex flex-col gap-1 items-center mt-1.5">
       {items.map((it, i) => (
-        <div key={i} className={`bg-black/55 rounded-full px-3 py-0.5 text-xs font-black ${it.c}`}>
+        <div key={i} className={`bg-black/55 rounded-full px-3 py-0.5 text-xs font-black ${it.c}${it.expiring ? ' buff-expiring' : ''}`}>
           {it.icon} {it.label}
         </div>
       ))}
@@ -189,8 +201,15 @@ function ControlsHint() {
   const elapsed = useGame((s) => s.elapsed)
   if (elapsed > 14) return null
   return (
-    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/55 rounded-xl px-4 py-1.5 text-white/75 text-xs font-bold">
-      WASD mover · SHIFT correr · ESPAÇO pular · CTRL esquiva · E interagir · Q voracidade · TAB mapa · ESC pausa
+    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/55 rounded-xl px-4 py-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-white/75 text-xs font-bold">
+      <span><span className="kbd">WASD</span> mover</span>
+      <span><span className="kbd">SHIFT</span> correr</span>
+      <span><span className="kbd">ESPAÇO</span> pular</span>
+      <span><span className="kbd">CTRL</span> esquiva</span>
+      <span><span className="kbd">E</span> interagir</span>
+      <span><span className="kbd">Q</span> voracidade</span>
+      <span><span className="kbd">TAB</span> mapa</span>
+      <span><span className="kbd">ESC</span> pausa</span>
     </div>
   )
 }
