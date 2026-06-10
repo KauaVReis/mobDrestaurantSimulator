@@ -91,6 +91,7 @@ export const sfx = {
   door() { tone({ f: 440, dur: 0.08, type: 'triangle', vol: 0.4 }); tone({ f: 587, t: 0.09, dur: 0.16, type: 'triangle', vol: 0.4 }) },
   kraken() { [196, 233, 196, 155].forEach((f, i) => tone({ f, t: i * 0.16, dur: 0.22, type: 'sawtooth', vol: 0.25 })) },
   voracity() { [330, 415, 523, 659, 830].forEach((f, i) => tone({ f, t: i * 0.07, dur: 0.18, type: 'sawtooth', vol: 0.3 })) },
+  hover() { tone({ f: 1400, dur: 0.04, type: 'sine', vol: 0.12 }) },
 }
 
 // ---------- Música procedural ----------

@@ -1,6 +1,7 @@
 // Menu de pausa (GDD §11.3) — timer congelado
 import { useState } from 'react'
 import { useGame } from '../game/store'
+import { sfx } from '../game/audio'
 import BigMap from './BigMap'
 
 export default function Pause() {
@@ -28,19 +29,19 @@ export default function Pause() {
           <h2 className="text-2xl font-black text-white mb-1">PAUSA</h2>
           <p className="text-white/50 text-xs font-bold mb-5">O sino de Bellyport está suspenso...</p>
           <div className="flex flex-col gap-2.5">
-            <button onClick={togglePause} className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-black cursor-pointer">
+            <button onClick={togglePause} onMouseEnter={sfx.hover} className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-black cursor-pointer">
               ▶ Continuar
             </button>
-            <button onClick={() => setShowMap(true)} className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
+            <button onClick={() => setShowMap(true)} onMouseEnter={sfx.hover} className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
               🗺️ Ver Mapa
             </button>
-            <button onClick={startGame} className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
+            <button onClick={startGame} onMouseEnter={sfx.hover} className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
               🔄 Reiniciar Sessão
             </button>
-            <button onClick={toggleMute} className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
+            <button onClick={toggleMute} onMouseEnter={sfx.hover} className="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
               {muted ? '🔇 Som: desligado' : '🔊 Som: ligado'}
             </button>
-            <button onClick={backToMenu} className="px-4 py-2.5 rounded-xl bg-red-500/80 hover:bg-red-400 text-white font-black cursor-pointer">
+            <button onClick={backToMenu} onMouseEnter={sfx.hover} className="px-4 py-2.5 rounded-xl bg-red-500/80 hover:bg-red-400 text-white font-black cursor-pointer">
               🏠 Menu Principal
             </button>
           </div>

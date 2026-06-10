@@ -1,6 +1,9 @@
 // Tela de resultado da sessão (GDD §10.3) + Game Over com humor (GDD §11.3)
 import { useGame } from '../game/store'
 import { DIFF_LABEL, DIFF_COLOR } from '../game/constants'
+import { sfx } from '../game/audio'
+
+function fmtPts(n) { return Math.round(n).toLocaleString('pt-BR') }
 
 export default function Results() {
   const results = useGame((s) => s.results)
@@ -21,19 +24,19 @@ export default function Results() {
         </div>
         <div className="text-white/80 font-bold mt-1">
           {r.victory
-            ? `+${r.score - r.krakenScore} de vantagem sobre o Chef Kraken`
-            : `Chef Kraken venceu por ${r.krakenScore - r.score} pontos e está dançando com os tentáculos...`}
+            ? `+${fmtPts(r.score - r.krakenScore)} de vantagem sobre o Chef Kraken`
+            : `Chef Kraken venceu por ${fmtPts(r.krakenScore - r.score)} pontos e está dançando com os tentáculos...`}
         </div>
 
         {/* placar */}
         <div className="grid grid-cols-2 gap-3 mt-5">
           <div className="bg-sky-500/15 rounded-2xl p-3">
             <div className="text-xs font-black text-sky-300">🐋 MOBDYCK</div>
-            <div className="text-4xl font-black text-white tabular-nums">{r.score}</div>
+            <div className="text-4xl font-black text-white tabular-nums">{fmtPts(r.score)}</div>
           </div>
           <div className="bg-purple-500/15 rounded-2xl p-3">
             <div className="text-xs font-black text-purple-300">🦑 CHEF KRAKEN</div>
-            <div className="text-4xl font-black text-white tabular-nums">{r.krakenScore}</div>
+            <div className="text-4xl font-black text-white tabular-nums">{fmtPts(r.krakenScore)}</div>
           </div>
         </div>
         <div className="text-white/70 font-bold text-sm mt-2">
@@ -52,7 +55,7 @@ export default function Results() {
                     {DIFF_LABEL[b.diff]}
                   </span>
                 </span>
-                <span className="tabular-nums">{b.rating?.icon} {b.pontos}</span>
+                <span className="tabular-nums">{b.rating?.icon} {fmtPts(b.pontos)}</span>
               </div>
             ))}
           </div>
@@ -61,23 +64,23 @@ export default function Results() {
         {/* recordes e recompensas */}
         {r.isRecord && (
           <div className="mt-3 text-amber-300 font-black star-burst">
-            🏅 NOVO RECORDE PESSOAL! {r.recordAnterior > 0 && `(anterior: ${r.recordAnterior})`}
+            🏅 NOVO RECORDE PESSOAL! {r.recordAnterior > 0 && `(anterior: ${fmtPts(r.recordAnterior)})`}
           </div>
         )}
         <div className="flex justify-center gap-5 mt-3 text-white/85 font-black">
-          <span>XP +{r.xp}</span>
-          <span>🪙 +{r.moedas}</span>
+          <span>XP +{fmtPts(r.xp)}</span>
+          <span>🪙 +{fmtPts(r.moedas)}</span>
         </div>
         {r.dica && (
           <div className="mt-3 text-xs text-white/60 font-semibold bg-white/5 rounded-xl p-2.5">💡 {r.dica}</div>
         )}
 
         <div className="flex gap-3 justify-center mt-6">
-          <button onClick={startGame}
+          <button onClick={startGame} onMouseEnter={sfx.hover}
             className="px-6 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-lg cursor-pointer hover:scale-105 transition-transform">
             🔁 Jogar Novamente
           </button>
-          <button onClick={backToMenu}
+          <button onClick={backToMenu} onMouseEnter={sfx.hover}
             className="px-6 py-2.5 rounded-2xl bg-white/15 hover:bg-white/25 text-white font-black text-lg cursor-pointer">
             🏠 Menu
           </button>

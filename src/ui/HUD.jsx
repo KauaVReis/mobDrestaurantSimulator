@@ -4,6 +4,8 @@ import { useGame } from '../game/store'
 import { world } from '../game/world'
 import { RESTAURANTS, COMBO_WINDOW, comboBonus, SESSION_TIME } from '../game/constants'
 
+function fmtPts(n) { return Math.round(n).toLocaleString('pt-BR') }
+
 function usePoll(ms = 110) {
   const [, force] = useReducer((c) => c + 1, 0)
   useEffect(() => {
@@ -71,14 +73,14 @@ function Scores() {
     <>
       <div className="absolute top-3 left-3 bg-black/55 rounded-2xl px-4 py-2 pixel-border">
         <div className="text-[10px] font-black text-sky-300 tracking-wider">🐋 MOBDYCK</div>
-        <div className="text-3xl font-black text-white tabular-nums leading-7">{score}</div>
+        <div className="text-3xl font-black text-white tabular-nums leading-7">{fmtPts(score)}</div>
         {recordToBeat !== null && (
-          <div className="text-[10px] font-bold text-white/50">recorde a bater: {recordToBeat}</div>
+          <div className="text-[10px] font-bold text-white/50">recorde a bater: {fmtPts(recordToBeat)}</div>
         )}
       </div>
       <div className="absolute top-3 right-3 bg-black/55 rounded-2xl px-4 py-2 pixel-border text-right">
         <div className="text-[10px] font-black text-purple-300 tracking-wider">CHEF KRAKEN 🦑</div>
-        <div className={`text-3xl font-black tabular-nums leading-7 ${kraken > score ? 'text-purple-300' : 'text-white'}`}>{kraken}</div>
+        <div className={`text-3xl font-black tabular-nums leading-7 ${kraken > score ? 'text-purple-300' : 'text-white'}`}>{fmtPts(kraken)}</div>
         <div className="text-[10px] font-bold text-white/50">{kraken > score ? 'ele está na frente!' : 'você lidera'}</div>
       </div>
     </>
@@ -151,9 +153,14 @@ function Minimap() {
         if (r.secreto && !secretUnlocked) return null
         const st = restaurants[r.id]
         const color = st.visited ? (st.rating?.stars >= 2 ? '#22c55e' : '#eab308') : st.krakenAte ? '#a855f7' : '#ef4444'
+        const isSecret = r.secreto && secretUnlocked && !st.visited
         return (
-          <div key={r.id} className="absolute w-2.5 h-2.5 rounded-full ring-1 ring-black/60"
-            style={{ left: `calc(${toPct(r.pos[0])}% - 5px)`, top: `calc(${toPct(r.pos[1])}% - 5px)`, background: color }} />
+          <div key={r.id} className={`absolute w-2.5 h-2.5 rounded-full ring-1 ring-black/60${isSecret ? ' animate-pulse' : ''}`}
+            style={{
+              left: `calc(${toPct(r.pos[0])}% - 5px)`, top: `calc(${toPct(r.pos[1])}% - 5px)`,
+              background: color,
+              ...(isSecret ? { animation: 'secret-ping 1s ease-in-out infinite' } : {}),
+            }} />
         )
       })}
       {/* kraken */}
@@ -189,6 +196,8 @@ function ControlsHint() {
 }
 
 export default function HUD() {
+  const timeLeft = useGame((s) => s.timeLeft)
+  const frozen = useGame((s) => s.elapsed < s.buffs.frozenUntil)
   return (
     <div className="absolute inset-0 pointer-events-none select-none z-10">
       <div className="absolute top-2 left-1/2 -translate-x-1/2 flex flex-col items-center">
@@ -201,6 +210,16 @@ export default function HUD() {
       <Minimap />
       <InteractPrompt />
       <ControlsHint />
+      {/* vinheta de urgência nos últimos 30s */}
+      {timeLeft < 30 && <div className="urgency-vignette" />}
+      {/* overlay de inspeção do Dr. Gastro */}
+      {frozen && (
+        <div className="fixed inset-0 z-20 flex items-center justify-center bg-red-900/25 inspection-overlay">
+          <div className="text-5xl font-black text-red-400 tracking-wider" style={{ textShadow: '0 0 20px rgba(239,68,68,0.7)' }}>
+            🕵️ SOB INSPEÇÃO!
+          </div>
+        </div>
+      )}
     </div>
   )
 }

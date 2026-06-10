@@ -1,6 +1,7 @@
 // Menu principal (GDD §11.3)
 import { useState } from 'react'
 import { useGame } from '../game/store'
+import { sfx } from '../game/audio'
 
 const PARADE = ['🍣', '🍔', '🍲', '🍕', '🍜', '🍖', '🍩', '🌮', '🫕', '🍦']
 
@@ -45,20 +46,20 @@ export default function Menu() {
         </p>
 
         <div className="flex flex-col items-center gap-2.5 mt-7">
-          <button onClick={startGame}
+          <button onClick={startGame} onMouseEnter={sfx.hover}
             className="px-10 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 text-2xl font-black cursor-pointer pixel-border hover:scale-105 transition-transform">
             🍽️ JOGAR
           </button>
           <div className="flex gap-2.5">
-            <button onClick={() => setModal('help')}
+            <button onClick={() => setModal('help')} onMouseEnter={sfx.hover}
               className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
               📖 Como Jogar
             </button>
-            <button onClick={() => setModal('records')}
+            <button onClick={() => setModal('records')} onMouseEnter={sfx.hover}
               className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
               🏆 Recordes
             </button>
-            <button onClick={toggleMute}
+            <button onClick={toggleMute} onMouseEnter={sfx.hover}
               className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-black cursor-pointer">
               {muted ? '🔇' : '🔊'}
             </button>
